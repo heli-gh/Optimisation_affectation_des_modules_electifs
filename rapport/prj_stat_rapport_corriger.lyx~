@@ -1,0 +1,5224 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass extarticle
+\use_default_options true
+\begin_modules
+customHeadersFooters
+\end_modules
+\maintain_unincluded_children false
+\language french
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement h
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 1
+\use_minted 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3.175cm
+\topmargin 3.175cm
+\rightmargin 3.175cm
+\bottommargin 3.175cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style french
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Right Header
+\begin_inset Graphics
+	filename Images/logo.jpeg
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Left Header
+
+\end_layout
+
+\begin_layout Title
+
+\series bold
+Projet3 MSRO
+\begin_inset Newline newline
+\end_inset
+
+Etude des performances et de la robustesse dans le test d’égalité de deux
+ variances
+\end_layout
+
+\begin_layout Author
+Yuchen MO, Yiheng HAN
+\begin_inset Newline newline
+\end_inset
+
+15 Mai 2022
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Images/langfr-280px-F-distribution_pdf.svg.png
+	lyxscale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Introduction
+\end_layout
+
+\begin_layout Standard
+On dispose de deux séries d’observations 
+\begin_inset Formula $\{x_{1},...,x_{p}\}$
+\end_inset
+
+ et 
+\begin_inset Formula $\{y_{1},...y_{q}\}$
+\end_inset
+
+ correspondant à des réalisations de deux variables aléatoires X et Y supposées
+ gaussiennes.
+ Ces observations représentent la même grandeur et sont exprimées dans la
+ même unité.
+ Par exemple, dans le domaine des mesures physiques, cela peut correspondre
+ à l’étude de la répétabilité d’un appareil, ou encore à l’évaluation de
+ sa reproductibilité.
+ 
+\end_layout
+
+\begin_layout Standard
+La répétabilité d’un appareil s’étudie en comparant deux échantillons obtenus
+ avec la même méthode (même appareil, mêmes réglages, même opérateur, ...)
+ dans un court intervalle de temps.
+ La reproductibilité, quant à elle, met en jeu deux appareils strictement
+ identiques et effectuant des mesures en parallèle.
+ 
+\end_layout
+
+\begin_layout Standard
+Les applications pratiques sont nombreuses.
+ La plupart du temps, l’objectif est de décider si X et Y sont issues de
+ la même population, ou s’il y a des chances pour qu’elles proviennent de
+ deux populations différentes.
+ Pour cela, il est d’usage de mettre en oeuvre un test de comparaison des
+ variances puis un test de comparaison des moyennes, la version de ce dernier
+ dépendant des résultats du premier.
+\end_layout
+
+\begin_layout Standard
+L’objet de ce projet est de décrire le test d’égalité des variances, de
+ le mettre en oeuvre et d’étudier par simulation son niveau empirique, sa
+ puissance et sa robustesse.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Préambule
+\end_layout
+
+\begin_layout Standard
+Dans la première partie, nous procéderons à une analyse mathématique.
+ Pour ce problème, on va disposer de deux échantillons de mesures : 
+\begin_inset Formula $\{x_{1},...,x_{p}\}$
+\end_inset
+
+ qui sont p mesures indépendantes d’une variable quantitative 
+\begin_inset Formula $X\sim N(\mu_{1},\sigma_{1}^{2})$
+\end_inset
+
+ et 
+\begin_inset Formula $\{y_{1},...y_{q}\}$
+\end_inset
+
+ qui sont q mesures indépendantes d’une variable quantitative 
+\begin_inset Formula $Y\sim N(\mu_{2},\sigma_{2}^{2})$
+\end_inset
+
+.
+ Par conséquent, nous devons construire des estimateurs sans biais 
+\begin_inset Formula $S_{x}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $S_{Y}^{2}$
+\end_inset
+
+ des deux variances et nous utiliserons également la Loi de Fichier pour
+ nous aider dans notre analyse car on peut obtenir 
+\begin_inset Formula $Z=\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}\sim F(p-1,q-1)$
+\end_inset
+
+ .
+ Ensuite, nous savons que dans R, nous avons la fonction rnorm pour nous
+ aider à créer des données qui suivent une loi de gaussienne.
+ Dans le cas général, nous n'avons pas une telle fonction.
+ Mais on a toujours un moyen d'obtenir des nombres aléatoires entre 0 et
+ 1, c'est-à-dire un ensemble de données qui suit à une loi uniforme.
+ Il faut donc trouver un moyen de créer une distribution gaussienne à partir
+ d'une distribution uniforme.
+ Nous allons utiliser l'algorithme de Box-Muller et en donner une preuve.
+\end_layout
+
+\begin_layout Standard
+Ensuite, nous utiliserons le langage R pour simuler.
+ Avant l'étude formelle, nous vérifierons l'algorithme de Box-Muller que
+ nous avons utilisé dans la partie précédente pour créer une distribution
+ gaussienne à travers des simulations.
+ Ensuite, on va étudier dans un premier temps les performances de ce test
+ d’égalité des variances, nous allons tester différentes tailles d'échantillons
+ et les différentes relations entre p et q.
+ Parallèlement, nous étudions également les similitudes et les différences
+ entre les deux méthodes de création de données à l'aide de la fonction
+ rnorm et de l'algorithme de Box-Muller.
+ Nous utiliserons la p-value du test statistique pour obtenir le pourcentage
+ de rejet de chaque groupe d'échantillons et comparerons l'histogramme de
+ fréquence de 
+\begin_inset Formula $Z=\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}$
+\end_inset
+
+ avec la courbe de densité de Loi de Fisher pour déterminer si la variance
+ du test est égale.
+ Pour des variances égales, nous obtiendrons des petits pourcentages de
+ rejet et des histogrammes de fréquence et des courbes de densité de Loi
+ de Fisher sont presque cohérentes.
+ Pour des variances inégales, nous obtiendrons un pourcentage de rejet grand
+ (
+\begin_inset Formula $\leqslant$
+\end_inset
+
+1) et des histogrammes de fréquence s'écarteront significativement des courbes
+ de densité de Loi de Fisher.
+\end_layout
+
+\begin_layout Standard
+Enfin, on va étudier la robustesse vis-à-vis de l’hypothèse de normalité.
+ On considère le cas où 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ ne suivent pas une loi de gaussienne, nous utiliserons la loi de Student
+ pour les tests.
+ Nous obtiendrons le résultats suivant: les tests statistiques qui testent
+ l'égalité de la variance fonctionnent mieux lorsque la distribution est
+ plus proche d'une distribution gaussienne.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Etude Mathématique et Algorithmique
+\end_layout
+
+\begin_layout Standard
+Soit 
+\begin_inset Formula $(X_{1},...,X_{p})$
+\end_inset
+
+ une suite de variables aléatoires indépendantes et identiquement distribuées,
+ de loi normale 
+\begin_inset Formula $N(\mu_{1},\sigma_{1}^{2})$
+\end_inset
+
+, et soit 
+\begin_inset Formula $(Y_{1},...,Y_{q})$
+\end_inset
+
+ une suite de variables aléatoires indépendantes et identiquement distribuées,
+ de loi normale 
+\begin_inset Formula $N(\mu_{2},\sigma_{2}^{2})$
+\end_inset
+
+.
+ On souhaite tester l’hypothèse selon laquelle les variances sont identiques
+ : 
+\begin_inset Formula $H_{0}:\sigma_{1}^{2}=\sigma_{2}^{2}$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Subsection
+Estimateurs sans biais de 
+\begin_inset Formula $\sigma_{1}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $\sigma_{2}^{2}$
+\end_inset
+
+ et leur loi
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On sait estimer les variances 
+\begin_inset Formula $\sigma_{1}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $\sigma_{2}^{2}$
+\end_inset
+
+ par les estimateurs respectifs suivants : 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Par identification : 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+S_{X}^{2}=\frac{1}{p-1}\sum_{j=1}^{p}(X_{j}-\overline{X_{p}})^{2}\quad\textrm{et}\quad S_{Y}^{2}=\frac{1}{q-1}\sum_{j=1}^{q}(Y_{j}-\overline{Y_{q}})^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Les deux échantillons sont gaussiens et indépendants, alors
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+\begin_inset Formula $\frac{(p-1)S_{X}^{2}}{\sigma_{1}^{2}}\backsim\mathcal{X}_{p-1}^{2}$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+\begin_inset Formula $\frac{(q-1)S_{Y}^{2}}{\sigma_{2}^{2}}\backsim\mathcal{X}_{q-1}^{2}$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+\begin_inset Formula $S_{X}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $S_{Y}^{2}$
+\end_inset
+
+ sont indépendants.
+\end_layout
+
+\begin_layout Subsection
+Construction de test statistique
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Preuve du résultat clé
+\end_layout
+
+\begin_layout Standard
+En se basant sur le résultat suivant : 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Définition 1
+\series default
+ Une variable aléatoire réelle distribuée selon la loi de Fisher peut être
+ construite comme le quotient de deux variables aléatoires indépendantes,
+ 
+\begin_inset Formula $U_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $U_{2}$
+\end_inset
+
+, distribuées chacune selon une Loi du 
+\begin_inset Formula $\chi^{2}$
+\end_inset
+
+ avec 
+\begin_inset Formula $d_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $d_{2}$
+\end_inset
+
+ degrés de liberté respectivement :
+\begin_inset Formula 
+\[
+Z=\frac{\frac{U_{1}}{d_{1}}}{\frac{U_{2}}{d_{2}}}\sim F(d_{1},d_{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+En effet, par le contenu de 1.1,on déduit alors que
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\frac{\frac{(p-1)S_{X}^{2}}{\sigma_{1}^{2}}/(p-1)}{\frac{(q-1)S_{Y}^{2}}{\sigma_{2}^{2}}/(q-1)}=\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}\sim F(p-1,q-1)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Le cadre théorique
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On fait les hypothèses fondamentales suivantes : 
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+les données 
+\begin_inset Formula $x_{1},x_{2},\ldots,x_{p}$
+\end_inset
+
+ sont les réalisations des variables aléatoires 
+\begin_inset Formula $X_{1},X_{2},\ldots,X_{p}$
+\end_inset
+
+ indépendantes et de même loi 
+\begin_inset Formula $\mathcal{N}(\mu_{1},\sigma_{1}^{2})$
+\end_inset
+
+ ; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+les données 
+\begin_inset Formula $y_{1},y_{2},\ldots,y_{q}$
+\end_inset
+
+ sont les réalisations des variables aléatoires 
+\begin_inset Formula $Y_{1},Y_{2},\ldots,Y_{q}$
+\end_inset
+
+ indépendantes et de même loi 
+\begin_inset Formula $\mathcal{N}(\mu_{2},\sigma_{2}^{2})$
+\end_inset
+
+ ; 
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+les 2 échantillons de variables aléatoires sont indépendants.
+ On souhaite tester au risque α l’hypothèse nulle.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+H_{0}:\ll\sigma_{1}^{2}=\sigma_{2}^{2}\gg
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+contre l’hypothèse alternative
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+H_{1}:\ll\sigma_{1}^{2}\neq\sigma_{2}^{2}\gg
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Choix de la statistique de test
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On sait que pour tous réels positifs 
+\begin_inset Formula $\sigma_{1}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $\sigma_{2}^{2}$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}\sim F(p-1,q-1)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Sous 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+, les variances théoriques 
+\begin_inset Formula $\sigma_{1}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $\sigma_{2}^{2}$
+\end_inset
+
+ sont égales.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Donc, sous 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+, la variable 
+\begin_inset Formula $Z$
+\end_inset
+
+ définie par 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}$
+\end_inset
+
+ suit une loi de Fisher à 
+\begin_inset Formula $p-1\;\textrm{et}\;q-1$
+\end_inset
+
+ ddl, et on note 
+\begin_inset Formula $Z\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+En revanche, sous 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $Z$
+\end_inset
+
+ ne suit plus une loi de Fisher, puisque on a la décomposition suivante
+ :
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+Z=\underset{\sim F(p-1,q-1)}{\underbrace{\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}}}\times\underset{\neq1\,\textrm{sous}\,H_{1}}{\underbrace{\frac{\sigma_{1}^{2}}{\sigma_{2}^{2}}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Pour ces raisons, 
+\begin_inset Formula $Z$
+\end_inset
+
+ est une statistique de test admissible.
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Construction de la zone de rejet
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Ici, compte-tenu de la forme de la statistique de test et de l’hypothèse
+ alternative, nous allons rejeter l’hypothèse nulle lorsque la valeur de
+ la statistique de test correspondra aux valeurs les moins probables d’une
+ loi de Fisher à 
+\begin_inset Formula $p-1\;\textrm{et}\;q-1$
+\end_inset
+
+ ddl, petites ou grandes.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+La région de rejet de l’hypothèse nulle au risque 
+\begin_inset Formula $α$
+\end_inset
+
+ sera donc de la forme 
+\begin_inset Formula $\{Z<f_{1}\}\cup\{Z>f_{2}\}$
+\end_inset
+
+ avec
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\mathbb{P}\left[\{Z<f_{1}\}\cup\{Z>f_{2}\}\right]=\alpha
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+où 
+\begin_inset Formula $f_{1}=f_{\alpha/2}$
+\end_inset
+
+ et 
+\begin_inset Formula $f_{2}=f_{1-\alpha/2}$
+\end_inset
+
+ sont respectivement les quantiles d’ordre 
+\begin_inset Formula $\alpha/2$
+\end_inset
+
+ e 
+\begin_inset Formula $1-\alpha/2$
+\end_inset
+
+ d’une loi de Fisher à 
+\begin_inset Formula $p-1\;\textrm{et}\;q-1$
+\end_inset
+
+ ddl.
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Construction du test d'homoscédasticité
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Donc, pour tester au risque α l’hypothèse nulle 
+\begin_inset Formula $H_{0}:\ll\sigma_{1}^{2}=\sigma_{2}^{2}\gg$
+\end_inset
+
+ contre l’hypothèse alternative 
+\begin_inset Formula $H_{1}:\ll\sigma_{1}^{2}\neq\sigma_{2}^{2}\gg$
+\end_inset
+
+ , on utilise la statistique de test 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Puis, on calcule 
+\begin_inset Formula $z_{obs}=s_{X}^{2}/s_{Y}^{2}$
+\end_inset
+
+ et on adopte la stratégie suivante :
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+Si 
+\begin_inset Formula $f_{\alpha/2}\leq z_{obs}\leq f_{1-\alpha/2}$
+\end_inset
+
+ , alors on ne peut pas rejeter l’hypothèse nulle 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ selon laquelle les 2 variances sont égales.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+Sinon, on rejette l’hypothèse nulle 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ au risque 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, et on considère que les 2 variances sont significativement différentes.
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Lien entre test et intervalle de confiance
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Tester au risque 
+\begin_inset Formula $α$
+\end_inset
+
+ l’hypothése nulle 
+\begin_inset Formula $H_{0}:\ll\sigma_{1}^{2}=\sigma_{2}^{2}\gg$
+\end_inset
+
+ contre 
+\begin_inset Formula $H_{1}:\ll\sigma_{1}^{2}\neq\sigma_{2}^{2}\gg$
+\end_inset
+
+ , est en fait équivalent à étudier l’appartenance de 1 à l’intervalle de
+ confiance du paramètre 
+\begin_inset Formula $\sigma_{1}^{2}/\sigma_{2}^{2}$
+\end_inset
+
+ au niveau de confiance 
+\begin_inset Formula $(1-\alpha)$
+\end_inset
+
+.
+ Plus 1 est éloigné des bornes de cet intervalle, plus le test sera significatif.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+En effet, on a l’équivalence suivante : 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+f_{\alpha/2}\leq z_{obs}\leq f_{1-\alpha/2}\;\Longleftrightarrow\;f_{\alpha/2}\leq\frac{s_{X}^{2}}{s_{Y}^{2}}\leq f_{1-\alpha/2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\qquad\qquad\qquad\qquad\qquad\;\Longleftrightarrow\;\frac{s_{X}^{2}}{s_{Y}^{2}f_{1-\alpha/2}}\leq1\leq\frac{s_{X}^{2}}{s_{Y}^{2}f_{\alpha/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\qquad\qquad\qquad\qquad\Longleftrightarrow\;1\in\textrm{IC}_{1-\alpha}(\sigma_{1}^{2}/\sigma_{2}^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Ainsi, on peut conclure sur le test en regardant si 1 appartient ou non
+ à l’intervalle de confiance.
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Petit exemple
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On suppose donc ici que les variables aléatoires 
+\begin_inset Formula $(X_{j})$
+\end_inset
+
+ suivent de loi 
+\begin_inset Formula $\mathcal{N}(\mu_{1},\sigma_{1}^{2})$
+\end_inset
+
+ et que les variables aléatoires 
+\begin_inset Formula $(Y_{j})$
+\end_inset
+
+ suivent de loi 
+\begin_inset Formula $\mathcal{N}(\mu_{2},\sigma_{2}^{2})$
+\end_inset
+
+ et nous allons tester au risque 
+\begin_inset Formula $5\%$
+\end_inset
+
+ l’hypothèse nulle 
+\begin_inset Formula $H_{0}:\ll\sigma_{1}^{2}=\sigma_{2}^{2}\gg$
+\end_inset
+
+ contre 
+\begin_inset Formula $H_{1}:\ll\sigma_{1}^{2}\neq\sigma_{2}^{2}\gg$
+\end_inset
+
+ .
+ On considère ici p=q=50.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On utilise pour cela la statistique de Fisher 
+\begin_inset Formula $Z=S_{X}^{2}/S_{Y}^{2}$
+\end_inset
+
+ qui sous 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ suit une loi de Fisher à 49 et 49 ddl.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+La zone de rejet est définie par : 
+\begin_inset Formula $\{Z<0,57\}\cup\{Z>1,76\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Algorithme pour obtenir des échantillons de deux variables gaussiennes indépenda
+ntes :Box-Muller
+\end_layout
+
+\begin_layout Subsubsection
+Introduction
+\end_layout
+
+\begin_layout Standard
+Cette méthode est une méthode de construction de 2 variables aléatoires
+ qui suivent une loi de gaussienne indépendantes en utilisant 2 variables
+ aléatoires qui suivent une loi uniforme indépendantes.
+ La description spécifique est : deux variables aléatoires indépendants
+ 
+\begin_inset Formula $U_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $U_{2}$
+\end_inset
+
+ qui suivent la loi uniforme sur 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+, de sorte que 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ satisfassent :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+X=cos(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y=sin(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ suivent une loi de gaussienne de moyenne 0 et de variance 1 et elles sont
+ indépendantes.
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Démonstration
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On suppose que 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ suivent une loi de gaussienne de moyenne 0 et de variance 1, et sont indépendan
+ts l'un de l'autre.
+ Soient respectivement 
+\begin_inset Formula $p(X)$
+\end_inset
+
+ et 
+\begin_inset Formula $p(Y)$
+\end_inset
+
+ leurs fonctions de densité, alors
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+p(X)=\frac{1}{\sqrt{2\pi}}e^{-\frac{X^{2}}{2}},p(Y)=\frac{1}{\sqrt{2\pi}}e^{-\frac{Y^{2}}{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Puisque 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ sont indépendants l'un de l'autre, leur densité de probabilité conjointe
+ satisfait
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+p(X,Y)=\frac{1}{\sqrt{2\pi}}e^{-\frac{X^{2}+Y^{2}}{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Lorsque nous transformons les coordonnées de X et Y,
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+X=Rcos(\theta),Y=Rsin(\theta)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Alors, on a:
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\,+\infty}\int_{-\infty}^{\,+\infty}\frac{1}{\sqrt{2\pi}}e^{-\frac{X^{2}+Y^{2}}{2}}dXdY=\int_{0}^{\,2\pi}\int_{0}^{\,+\infty}\frac{1}{\sqrt{2\pi}}e^{-\frac{R^{2}}{2}}Rd\theta dR=1
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+A partir de là, les fonctions de répartition 
+\begin_inset Formula $P_{R}$
+\end_inset
+
+ et 
+\begin_inset Formula $P_{\theta}$
+\end_inset
+
+ de 
+\begin_inset Formula $R$
+\end_inset
+
+ et 
+\begin_inset Formula $θ$
+\end_inset
+
+ peuvent être obtenues,
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+P_{R}(R\leq r)=\int_{0}^{\,2\pi}\int_{0}^{\,r}\frac{1}{\sqrt{2\pi}}e^{-\frac{R^{2}}{2}}Rd\theta dR=1-e^{-\frac{r^{2}}{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+P_{\theta}(\theta\leq\phi)=\int_{0}^{\,\phi}\int_{0}^{\,+\infty}\frac{1}{\sqrt{2\pi}}e^{-\frac{R^{2}}{2}}Rd\theta dR=\frac{\phi}{2\pi}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Évidemment, 
+\begin_inset Formula $θ$
+\end_inset
+
+ suit à une loi de uniforme sur 
+\begin_inset Formula $[0,2π]$
+\end_inset
+
+, alors nous avons
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+F_{R}(r)=1-e^{-\frac{r^{2}}{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Donc sa fonction inverse est
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+R=F_{R}^{-1}(z)=\sqrt{-2ln(1-z)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Lorsque 
+\begin_inset Formula $z$
+\end_inset
+
+ suit à une loi de uniforme sur 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+, la fonction de répartition de 
+\begin_inset Formula $R$
+\end_inset
+
+ est 
+\begin_inset Formula $F_{R}(r)$
+\end_inset
+
+.
+ Par conséquent, on peut avoir deux variables aléatoires indépendants 
+\begin_inset Formula $U_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $U_{2}$
+\end_inset
+
+ qui suivent la loi de uniforme sur 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+ telles que
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+\theta=2\pi U_{1},\;1-z=U_{2},\textrm{alors}R=\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Nous amenons ensuite R dans les expressions polaires originales pour X et
+ Y,
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+X=Rcos(\theta)\Longleftrightarrow X=cos(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+Y=Rsin(\theta)\Longleftrightarrow Y=sin(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Nous pouvons obtenir les deux premières expressions pour 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+, et elles suivent à une loi de gaussienne de moyenne 0 et de variance 1,
+ et 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ sont indépendants.
+\end_layout
+
+\begin_layout Subsubsection
+Algorithme
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+U1 = RandomNumber(0~1)
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+U2 = RandomNumber(0~1)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+X=cos(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+Y=sin(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Box-Muller Algorithme
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Etude par simulation sous R
+\end_layout
+
+\begin_layout Standard
+Dans cette partie, premièrement, nous voulons vérifier l'algorithme obtenu
+ dans la section 1.3 par simulation.
+ Après, comme indiqué dans la préface, on va étudier dans un premier temps
+ les performances de ce test d’égalité des variances, puis dans un second
+ temps, étudier la robustesse vis-à-vis de l’hypothèse de normalité.
+ 
+\end_layout
+
+\begin_layout Subsection
+Simulation de l'algorithme de Box-Muller
+\end_layout
+
+\begin_layout Standard
+D'après 1.3, nous savons que deux variables gaussiennes indépendantes peuvent
+ être obtenues à partir de deux variables uniformes indépendantes en utilisant
+ l'algorithme de Box-Muller.
+ Nous voulons le visualiser dans R pour vérifier notre algorithme.
+ On sait que si on a deux variables aléatoires indépendants 
+\begin_inset Formula $U_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $U_{2}$
+\end_inset
+
+ qui suivent à la loi de uniforme sur 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+, de sorte que 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ satisfassent :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+X=cos(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y=sin(2\pi U_{1})\sqrt{-2lnU_{2}}
+\]
+
+\end_inset
+
+
+\lang english
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ suivent à une loi de gaussienne de moyenne 0 et de variance 1 et elles
+ sont indépendants.
+ Donc, on crée 2 variables aléatoires par la fonction runif.
+ Après, calcule 
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ en utilisant les formules dessus.
+ 
+\lang french
+Puis, on présente l’histogramme en fréquence de 1000 valeurs de 
+\lang english
+
+\begin_inset Formula $X$
+\end_inset
+
+ et 
+\begin_inset Formula $Y$
+\end_inset
+
+ et compare avec la ligne de densité de 
+\begin_inset Formula $N(0,1).$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/box muller loi normale.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Gausienne 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On voit que son histogramme de fréquence et la courbe de densité de la loi
+ de gaussienne sont presque en accord.
+ Ceci vérifie notre preuve mathématique.
+\end_layout
+
+\begin_layout Subsection
+Le pourcentage de rejet (à tort) de l’hypothèse nulle
+\end_layout
+
+\begin_layout Standard
+On étudie tout d’abord le niveau empirique du test, que l’on va comparer
+ au niveau théorique que l’on aura choisi (prendre 5%).
+ Cette étape consiste à vérifier que le test est bien calibré sous l’hypothèse
+ nulle 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+, c’est à dire qu’on est bien amené à ne rejeter 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ à tort que dans 5% des cas.
+ 
+\end_layout
+
+\begin_layout Standard
+Pour cela, on simulera 400 échantillons de taille 1000 pour les deux variables
+ aléatoires gaussiennes indépendantes X et Y , et on comptabilisera pour
+ les différentes tailles d’échantillon n = 50, 100, 200, 500, 1000, le pourcenta
+ge de rejet (à tort) de l’hypothèse nulle.
+ Dans cette partie, nous supposons que 
+\begin_inset Formula $p=q=n$
+\end_inset
+
+ dans chaque échantillon.
+ Ici, on utilise la fonction rnorm pour créer les 2 variables.
+ Dans notre exemple, nous prenons 
+\begin_inset Formula $X\sim N(10,36)$
+\end_inset
+
+ et 
+\begin_inset Formula $Y\sim N(10,36)$
+\end_inset
+
+, donc la variance théorique de 2 variables aléatoires sont égale.
+ Nous testons chaque groupe d'échantillons avec la fonction var.test, nous
+ comptons lorsque 
+\begin_inset Formula $p-value\leqslant0,05$
+\end_inset
+
+, puis divisons le nombre compté par le nombre d'échantillons 400 pour obtenir
+ le pourcentage.
+ On rassemblera les résultats dans un tableau unique que l’on commentera.
+ Avant de tester, nous faisons des suppositions sur les résultats.
+ Premièrement, comme nous fixons les deux variances théoriques comme étant
+ égales, les pourcentages de rejet doivent tous deux être faibles.
+ Ensuite, nous supposons que lorsque n augmente, le pourcentage de rejet
+ devrait devenir de plus en plus petit.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/Pourcentage de rejet v=6.bmp
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=q=n et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+ R
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+500
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pourcentage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0875
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0475
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.07
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.065
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=q=n et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Commentaire: Nous pouvons voir que les pourcentages de rejet sont faibles
+ (<0.1) pour différentes tailles d'échantillons.
+ Cependant, le pourcentage de rejet n'a pas diminué avec l'augmentation
+ de la taille de l'échantillon.
+ Nous avons effectué quelques séries de tests supplémentaires.
+ Nous donnons deux résultats à titre d'exemple.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/capture_20220510171331403.bmp
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/capture_20220510171539408.bmp
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=q=n et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+ tests supplémentaires
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En fait, cela est raisonnable, car la variance obtenue par l'estimateur
+ sans biais est toujours déviée de la variance théorique (fluctuations d’échanti
+llonnage), donc lorsque l'on suppose que les deux variances théoriques sont
+ égales, le rejet de 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ est ici toujours dû à l'écart de la valeur de l'estimateur sans biais de
+ la variance théorique.
+ Ainsi, le pourcentage de rejet ne diminue pas nécessairement lorsque n
+ augmente.
+\end_layout
+
+\begin_layout Subsection
+Visualisation avec Loi de Fisher
+\end_layout
+
+\begin_layout Standard
+On pourra aussi comparer la loi de la statistique de test à sa loi théorique
+ pour illustrer la bonne adéquation sous l’hypothèse nulle.
+ Pour cela, on présentera l’histogramme en fréquence des 400 valeurs de
+ la statistique de test auquel on superposera la densité de la loi de Fisher
+ à p et q degrés de liberté.
+ Dans notre exemple, nous prenons 
+\begin_inset Formula $X\sim N(10,36)$
+\end_inset
+
+ et 
+\begin_inset Formula $Y\sim N(10,36)$
+\end_inset
+
+, donc la variance théorique de 2 variables aléatoires sont égale.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/capture_20220510004538088.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/capture_20220510010519152.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Commentaire: Nous pouvons voir que l'histogramme de fréquence correspond
+ presque à la courbe de densité de Loi de Fisher.
+ Cela signifie que dans notre exemple, pour n différences, les 400 valeurs
+ de la statistique sont réparties selon la loi de Fisher.
+ Ceci vérifie que 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Test en utilisant l'algorithme de Box-Muller
+\end_layout
+
+\begin_layout Standard
+De la même manière, nous utilisons les variables aléatoires obtenues par
+ l'algorithme box-muller pour les tests.
+ Nous pouvons obtenir son pourcentage de rejet et sa visualisation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/box muller,,.bmp
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=q=n et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+ R(Box-Muller)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+500
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pourcentage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.575
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.045
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=q=n et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+(Box-Muller)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/box muller,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/box muller.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher(Box-Muller)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On constate que les pourcentages de réjet et les histogrammes de fréquence
+ obtenus avec la méthode de Box-Muller sont similaires à ceux obtenus avec
+ la fonction rnorm.
+ Le pourcentage de rejet est faible.
+ L'histogramme de fréquence correspondait à peu près à la courbe de densité
+ de Loi de Fisher.
+ Cela prouve encore que la méthode de Box-Muller est une excellente méthode
+ pour construire 2 variables suivant à la loi de gaussienne à partir de
+ 2 variables suivant à la loi de uniforme.
+ 
+\end_layout
+
+\begin_layout Standard
+Cependant, après de nombreuses expériences, nous avons constaté que lors
+ de l'utilisation de la méthode de Box-Muller, parfois l'histogramme de
+ fréquence ne correspond pas très bien à la courbe de densité de Loi de
+ Fisher.
+ Nous supposons que cela est dû au fait que dans le processus de calcul
+ de X et Y via 
+\begin_inset Formula $U_{1}$
+\end_inset
+
+ et 
+\begin_inset Formula $U_{2}$
+\end_inset
+
+, le calcul des fonctions logarithme, racine et trigonométrique générera
+ une certaine erreur d'arrondi, entraînant un certain écart dans le résultat
+ final.
+ Les résultats produits avec rnorm sont plus stables.
+ Par conséquent, dans les simulations ultérieures, nous utilisons toujours
+ la fonction rnorm.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/B-M mals.bmp
+	lyxscale 60
+	scale 80
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/B-M mal.bmp
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher(Box-Muller Mauvais)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Etude de l'influence de l'ordre de grandeur des variances
+\end_layout
+
+\begin_layout Standard
+Après, on étudiera aussi l’influence de l’ordre de grandeur des variances.
+ Dans notre exemple, nous prenons 
+\begin_inset Formula $X\sim N(10,36)$
+\end_inset
+
+ et 
+\begin_inset Formula $Y\sim N(10,36)$
+\end_inset
+
+, donc la variance théorique de 2 variables aléatoires sont égale.
+ Mais ici, on met p=200, et on test les différents conditions q=50,100,200,500,1
+000.
+ On peut obenir le tableau de pourcentage de rejet et son visualisation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/p=200,q=....bmp
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=200 q=50,...,1000 et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+ R
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+p
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+500
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pourcentage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0475
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0575
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.045
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.050
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0375
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet p=200 q=50,...,1000 et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On voit que le pourcentage de rejet est encore très faible lorsque p<q ou
+ p>q et les données ne sont pas très différentes lorsque n est égal.
+ Ceci est raisonnable car la relation entre p et q n'est pas un facteur
+ significatif affectant la test.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/p=200,q=50....bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher p=200 q=50,...,1000
+ et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nous pouvons voir que lorsque p<q ou p>q, l'histogramme de fréquence est
+ essentiellement conforme à la courbe de densité de Loi de Fisher.
+ Parce que 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+, p et q n'ont aucun effet sur cela.
+ Mais en regardant l'image, nous pouvons voir que lorsque q est beaucoup
+ plus grand que p, comme p=200, q=500 et p=200, q=1000, la fréquence de
+ 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}$
+\end_inset
+
+ proche de 1 est très élevée.
+ Nous effectuons quelques séries de tests supplémentaires.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/p=50,q=50,1000....bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher p=50 q=50,...,1000
+ et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/p=,q=50.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher p=50,...,1000 q=50
+ et 
+\begin_inset Formula $\sigma_{1}^{2}=\sigma_{2}^{2}=36$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On constate tout de même que lorsque les valeurs de p et q sont très différentes
+, la fréquence de 
+\begin_inset Formula $s_{X}^{2}/s_{Y}^{2}$
+\end_inset
+
+ proche de 1 est grande, ce qui est supérieur à la ligne de densité de la
+ loi de Ficher.
+ C'est à cause des fluctuations d'échantillonage.
+\end_layout
+
+\begin_layout Subsection
+Etude des cas sous 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On se place maintenant sous 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+ en examinant le cas où 
+\begin_inset Formula $\sigma_{2}^{2}=\sigma_{1}^{2}+ε$
+\end_inset
+
+ et en faisant varier 
+\begin_inset Formula $ε$
+\end_inset
+
+ de façon à voir comment le test rejette 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+ en fonction de la différence entre 
+\begin_inset Formula $\sigma_{1}^{2}$
+\end_inset
+
+ et 
+\begin_inset Formula $\sigma_{2}^{2}$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Standard
+Pour cela, on va comptabiliser le pourcentage de rejet (à raison) de 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+.
+ Ce que l’on souhaite c’est que ce pourcentage soit le plus élevé possible
+ et égal à 100% dans l’absolu.
+ 
+\end_layout
+
+\begin_layout Standard
+Nous allons considrer trois situations : une très difficile (
+\begin_inset Formula $ε$
+\end_inset
+
+ petit), une moyennement difficile, et une facile (
+\begin_inset Formula $ε$
+\end_inset
+
+ grand).
+ Pour chaque situation, il faut simuler 400 échantillons indépendants de
+ taille 1000.
+ Pour chaque jeu de données, et pour chaque valeur de n = 50, 100, 200,
+ 500, 1000, on comptabilisera le pourcentage de rejet (à raison) de l’hypothèse
+ nulle 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+.
+ On stockera l’ensemble des résultats obtenus dans un seul tableau à deux
+ entrées : la valeur de 
+\begin_inset Formula $ε$
+\end_inset
+
+ et la taille 
+\begin_inset Formula $n$
+\end_inset
+
+ de l’échantillon.
+\end_layout
+
+\begin_layout Standard
+Pour comparaison avec les études précédentes, nous utilisons toujours 
+\begin_inset Formula $X\sim N(10,\sigma_{1}^{2}=36)$
+\end_inset
+
+, et 
+\begin_inset Formula $\varepsilon=0.1201,13,28,189$
+\end_inset
+
+(Ecart type plus 0.1,1,2,9).
+ Nous avons pris quatre 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ différents, afin de rendre le processus de changement plus évident.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+500
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\varepsilon=0.1201$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.07
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0675
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0625
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.07
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0825
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\varepsilon=13$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.142
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.305
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.925
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.998
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\varepsilon=28$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.823
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.983
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\varepsilon=189$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet avec 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ différents
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Commentaire: Nous pouvons voir qu'à mesure que 
+\begin_inset Formula $\varepsilon(0.1201)$
+\end_inset
+
+ augmente, le pourcentage de rejet augmente progressivement, se rapprochant
+ de 1 jusqu'à ce qu'il soit égal à 1.
+ Pour un petit 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+, le pourcentage de rejet est encore faible, et n'augmente pas significativement
+ par rapport à 
+\begin_inset Formula $\sigma_{2}^{2}=\sigma_{1}^{2}$
+\end_inset
+
+.
+ Et nous pouvons voir que dans ce cas, le pourcentage de rejet n'augmente
+ pas nécessairement lorsque 
+\begin_inset Formula $n$
+\end_inset
+
+ augmente.
+ En effet, lorsque 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ est petit, la différence entre la variance calculée par l'estimateur sans
+ biais et la variance théorique (fluctuations d’échantillonnage) reste un
+ facteur important affectant les résultats.
+ 
+\end_layout
+
+\begin_layout Standard
+Mais à mesure que le 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ augmente, nous pouvons voir que le pourcentage de rejet augmente de manière
+ significative, se rapprochant de 1 jusqu'à ce qu'il soit égal à 1.
+ Et le pourcentage de rejet augmente à mesure que 
+\begin_inset Formula $n$
+\end_inset
+
+ augmente jusqu'à ce qu'il soit égal à 1.
+ En effet, lorsque le 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ est grand, la différence dans la variance théorique elle-même est le facteur
+ décisif affectant le résultat, et la différence entre l'estimation sans
+ biais et la variance théorique (fluctuations d’échantillonnage) n'a pas
+ un impact important sur le résultat.
+ 
+\end_layout
+
+\begin_layout Standard
+Puis, on présente l’histogramme en fréquence des 400 valeurs de la statistique
+ de test auquel on superpose la densité de la loi de Fisher à p et q degrés
+ de liberté.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/ecarttype+0,1,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/ecarttype+0.1.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+=0.1201
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Lorsque le 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ est petit, nous pouvons voir que l'histogramme de fréquence se conforme
+ également fondamentalement à la ligne de densité Loi de Fisher.
+ Mais il y a déjà de petites déviations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/ep=7,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/ep=7.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+=13
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/et=8,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/et=8,,.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+=28
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/ep=15.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+=189
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nous pouvons voir qu'à mesure que 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ augmente, l'histogramme de fréquence de 
+\lang english
+
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}$
+\end_inset
+
+
+\lang french
+ se déplace de plus en plus vers la gauche par rapport à la ligne de densité
+ de Loi de Fisher, s'étend de plus en plus vers le haut et et plus étroit.
+ Lorsque 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+=189, l'image est très mauvaise.
+\end_layout
+
+\begin_layout Standard
+Nous avons analysé dans la partie théorique:
+\lang english
+ Sous 
+\begin_inset Formula $H_{0}$
+\end_inset
+
+, la variable 
+\begin_inset Formula $Z$
+\end_inset
+
+ définie par 
+\begin_inset Formula $Z=\frac{S_{X}^{2}}{S_{Y}^{2}}$
+\end_inset
+
+ suit une loi de Fisher à 
+\begin_inset Formula $p-1\;\textrm{et}\;q-1$
+\end_inset
+
+ ddl, et on note 
+\begin_inset Formula $Z\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+En revanche, sous 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $Z$
+\end_inset
+
+ ne suit plus une loi de Fisher, puisque on a la décomposition suivante
+ :
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Formula 
+\[
+Z=\underset{\sim F(p-1,q-1)}{\underbrace{\frac{\sigma_{2}^{2}S_{X}^{2}}{\sigma_{1}^{2}S_{Y}^{2}}}}\times\underset{\neq1\,\textrm{sous}\,H_{1}}{\underbrace{\frac{\sigma_{1}^{2}}{\sigma_{2}^{2}}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+L'expansion vers le haut, le rétrécissement et le déplacement de l'histogramme
+ de fréquence sont cohérents avec notre analyse théorique.
+\end_layout
+
+\begin_layout Subsection
+
+\lang english
+La robustesse du test vis-à-vis de l’hypothèse de normalité
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+On étudie maintenant la robustesse du test vis-à-vis de l’hypothèse de normalité
+ : Que se passe-t-il lorsque les échantillons ne sont pas gaussiens ? On
+ se restreindra à l’étude du niveau empirique en considérant des réalisations
+ de variables X et Y de loi de Student de même degré de liberté.
+ On s’éloignera de l’hypothèse de normalité en considérant successivement
+ les cas des lois de Student avec 10 ddl, 8 ddl, 6 ddl puis 4 ddl.
+ Rassembler les résultats dans un tableau adéquat.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+500
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ddl=4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.295
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.287
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.33
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.333
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.412
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ddl=6$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.147
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.158
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.175
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.18
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.233
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ddl=8$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.128
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.125
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.152
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.147
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ddl=10$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1175
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0875
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.115
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1225
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.12
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pourcentage de rejet avec 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ différents
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=4,,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=4.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher (Student ddl=4)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=6,,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=6.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher (Student ddl=6)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=8,,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=8.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher (Student ddl=8)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=10,,.bmp
+	lyxscale 60
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Images/std ddl=10,.bmp
+	lyxscale 40
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogramme en fréquence et densité de la loi de Fisher (Student ddl=10)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+On constate qu'à variances égales, le pourcentage de rejet obtenu avec la
+ Loi de Student est supérieur à celui obtenu avec la Loi de Gaussienne.
+ Mais à mesure que les degrés de liberté augmentent, le pourcentage de rejets
+ utilisant la Loi de Student diminue.
+ Pour l'histogramme de fréquence, nous pouvons voir que lorsque le degré
+ de liberté est de 2, l'histogramme de fréquence est assez incohérent avec
+ la courbe de Loi de Fisher.
+ Au fur et à mesure que les degrés de liberté augmentent, l'histogramme
+ de fréquence devient progressivement plus conforme à la courbe de Loi de
+ Fisher.
+\end_layout
+
+\begin_layout Standard
+On sait qu'une distribution gaussienne sera obtenue lorsque les degrés de
+ liberté de la Loi de Student tendront vers l'infini.
+ Et on sait que la construction d'un estimateur sans biais de la variance
+ et la conclusion que 
+\lang english
+
+\begin_inset Formula $Z\underset{H_{0}}{\backsim}F(p-1,q-1)$
+\end_inset
+
+
+\lang french
+ est indépendante de la loi utilisée.
+ Par conséquent, on peut obtenir que l'utilisation d'une loi de gaussienne
+ pour construire des échantillons est plus robuste aux tests statistiques
+ d'égalité des variances.
+\end_layout
+
+\begin_layout Standard
+Pour expliquer ça, on sait que le 
+\begin_inset Quotes fld
+\end_inset
+
+sans biais
+\begin_inset Quotes frd
+\end_inset
+
+ d'estimateur sans biais ne peut se refléter que dans un grand nombre d'expérien
+ces répétées.
+ Pour n=50,...,1000, le nombre de répétitions n'est évidemment pas suffisant.
+ Ainsi, pour ce phénomène, on suppose que les échantillons construits à
+ l'aide de la loi de gaussienne obtiendront un estimateur sans biais de
+ la variance plus proche de la variance théorique avec moins de répétitions.
+ C'est probablement parce que de toutes les distributions de probabilité
+ possibles avec la même variance, la loi de gaussienne a la plus grande
+ incertitude sur les nombres réels.
+ Par conséquent, l'utilisation d'une loi de gaussienne pour construire des
+ échantillons est plus robuste aux tests statistiques d'égalité des variances.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Nous avons beaucoup gagné grâce à ce projet.
+ Tout d'abord, nous avons réalisé indépendamment une étude statistique complète
+ allant de l'analyse mathématique à la simulation de code, et avons une
+ meilleure compréhension de l'application des tests statistiques.
+ Il est très important de comprendre les cours en mettant en pratique ce
+ que vous avez appris en cours.
+\end_layout
+
+\begin_layout Standard
+Deuxièmement, nous avons toujours utilisé des fonctions dans R pour créer
+ directement des données qui correspondent à une certaine distribution.
+ Mais en fait, le processus de création d'autres lois différentes à partir
+ de la Loi Uniform est également très important.
+ Cela représente la progression du cas le plus simple vers divers cas particulie
+rs.
+ C'est très décisif dans la recherche.
+\end_layout
+
+\begin_layout Standard
+Ensuite, nous avons également une meilleure compréhension de l'impact des
+ fluctuations de l'échantillon sur la recherche et des différents poids
+ des différents impacts sur la recherche.
+ Par exemple, sous l'hypothèse que les variances sont égales, le pourcentage
+ de rejet est faible, mais il n'atteint pas près de 0, ni ne diminue avec
+ l'augmentation de l'échantillon.
+ Cela est dû aux fluctuations de l'échantillon.
+ Dans le cas de variances très différentes, on peut obtenir des pourcentages
+ de rejet de 1.
+ Cela montre que l'impact des différences de variance est beaucoup plus
+ important que l'impact des fluctuations de l'échantillon.
+\end_layout
+
+\begin_layout Standard
+Enfin, nous avons également compris pourquoi nous utilisons généralement
+ la loi de gaussienne pour créer des échantillons dans les tests statistiques.
+ D'après les recherches en 2.7, nous voyons que l'utilisation d'autres lois
+ peut rendre les résultats de test déraisonnables, et la robustesse de la
+ loi de gaussienne est la meilleure.
+ Nous savons que nos estimateurs sans biais d'un paramètre de la loi sont
+ basées sur une grande quantité de données.
+ Mais en pratique, on ne peut pas utiliser de très grandes quantités de
+ données.
+ Par conséquent, se poser la question 
+\begin_inset Quotes fld
+\end_inset
+
+Quelle loi donne de meilleurs résultats avec des données plus petites ?
+\begin_inset Quotes frd
+\end_inset
+
+ est une question que nous ne pouvons jamais ignorer.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Bibliographie
+\end_layout
+
+\begin_layout Standard
+Les documents de cours de Statistique
+\end_layout
+
+\begin_layout Standard
+https://zhuanlan.zhihu.com/p/38638710 
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Annex
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=R,breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+# Nettoyage de l’espace de travail 
+\end_layout
+
+\begin_layout Plain Layout
+
+rm(list=ls()) 
+\end_layout
+
+\begin_layout Plain Layout
+
+# Instruction pour que tout le monde ait le m^eme al′ea de d′epart 
+\end_layout
+
+\begin_layout Plain Layout
+
+#set.seed(125) 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+B = 400 ; N = 1000 
+\end_layout
+
+\begin_layout Plain Layout
+
+nval = c(50, 100,200,500,1000)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+data1 <- matrix(NA, ncol=B, nrow=N) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	data1[,b] = rnorm(N,10,6) #Pour les variance differant, on change le 3eme
+ variable et pour loi de Student on utilise rt(N,ddl)
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\begin_layout Plain Layout
+
+P = matrix(NA,ncol = length(nval), nrow=B) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (j in 1:length(nval)){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		n = nval[j]     
+\end_layout
+
+\begin_layout Plain Layout
+
+		res = 0;     
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (k in 1:n){       
+\end_layout
+
+\begin_layout Plain Layout
+
+			res = res + (data1[k,b]-mean(data1[1:n,b]))*(data1[k,b]-mean(data1[1:n,b]))
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+		}     
+\end_layout
+
+\begin_layout Plain Layout
+
+		Q[b,j] = res/(n-1)  
+\end_layout
+
+\begin_layout Plain Layout
+
+	} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+data2 <- matrix(NA, ncol=B, nrow=N) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	data2[,b] = rnorm(N,10,6) 
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\begin_layout Plain Layout
+
+Q = matrix(NA,ncol = length(nval), nrow=B) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (j in 1:length(nval)){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		n = nval[j]     
+\end_layout
+
+\begin_layout Plain Layout
+
+		res = 0;     
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (k in 1:n){       
+\end_layout
+
+\begin_layout Plain Layout
+
+		res = res + (data2[k,b]-mean(data2[1:n,b]))*(data2[k,b]-mean(data2[1:n,b]))
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+		}     
+\end_layout
+
+\begin_layout Plain Layout
+
+	P[b,j] = res/(n-1)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+" Pour Box-Muller mu = 10 sigma = 6
+\end_layout
+
+\begin_layout Plain Layout
+
+data1 <- matrix(NA, ncol=B, nrow=N) 
+\end_layout
+
+\begin_layout Plain Layout
+
+data2 <- matrix(NA, ncol=B, nrow=N) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	U1 = runif(N)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	U2 = runif(N)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	r = sqrt(-2*log(U2))   
+\end_layout
+
+\begin_layout Plain Layout
+
+	theta = 2*pi*U1   
+\end_layout
+
+\begin_layout Plain Layout
+
+	P1 = r*cos(theta)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	Q1 = r*sin(theta)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	P = sigma*P1 + mu   
+\end_layout
+
+\begin_layout Plain Layout
+
+	Q = sigma*Q1 + mu   
+\end_layout
+
+\begin_layout Plain Layout
+
+	data1[,b] = P   
+\end_layout
+
+\begin_layout Plain Layout
+
+	data2[,b] = Q }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+P = matrix(NA,ncol = length(nval), nrow=B) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (j in 1:length(nval)){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		n = nval[j]     
+\end_layout
+
+\begin_layout Plain Layout
+
+		res = 0;     
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (k in 1:n){     
+\end_layout
+
+\begin_layout Plain Layout
+
+			res = res + (data1[k,b]-mean(data1[1:n,b]))*(data1[k,b]-mean(data1[1:n,b]))
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+		}     
+\end_layout
+
+\begin_layout Plain Layout
+
+		P[b,j] = res/(n-1)     
+\end_layout
+
+\begin_layout Plain Layout
+
+	} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Q = matrix(NA,ncol = length(nval), nrow=B) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (b in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (j in 1:length(nval)){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		n = nval[j]     
+\end_layout
+
+\begin_layout Plain Layout
+
+		res = 0;     
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (k in 1:n){     
+\end_layout
+
+\begin_layout Plain Layout
+
+			res = res + (data2[k,b]-mean(data2[1:n,b]))*(data2[k,b]-mean(data2[1:n,b]))
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+		}    
+\end_layout
+
+\begin_layout Plain Layout
+
+	Q[b,j] = res/(n-1)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+" 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Pourcentage <- matrix(NA,ncol=1,nrow=length(nval)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (j in 1:length(nval)){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	n = nval[j]   
+\end_layout
+
+\begin_layout Plain Layout
+
+	compt = 0;   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for(c in 1:B){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		res=var.test(data1[1:n,c],data2[1:n,c])     
+\end_layout
+
+\begin_layout Plain Layout
+
+		if(res$p.value<=0.05){compt = compt+1}   
+\end_layout
+
+\begin_layout Plain Layout
+
+	}   
+\end_layout
+
+\begin_layout Plain Layout
+
+	Pourcentage[j,1]=compt/400 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+S = matrix(NA,ncol = length(nval), nrow=B) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (s in 1:B){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (j in 1:length(nval)){     
+\end_layout
+
+\begin_layout Plain Layout
+
+		S[s,j] = P[s,j]/Q[s,j]   
+\end_layout
+
+\begin_layout Plain Layout
+
+	} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Affichage
+\end_layout
+
+\begin_layout Plain Layout
+
+y = seq(-4 , 4,0.01) 
+\end_layout
+
+\begin_layout Plain Layout
+
+nval = c(50, 100,200,500,1000) 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(2,3)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (i in 1:5){   
+\end_layout
+
+\begin_layout Plain Layout
+
+	n = nval[i]   
+\end_layout
+
+\begin_layout Plain Layout
+
+	screen(i)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	Titre = paste("n = ",n,sep="")   
+\end_layout
+
+\begin_layout Plain Layout
+
+	hist(S[,i], col="cyan", main = Titre, freq=FALSE, cex.main=1.6, cex.axis=1.5,xlim=c
+(0,2), ylim=c(0,4))   
+\end_layout
+
+\begin_layout Plain Layout
+
+	lines(y, df(y, n-1, n-1), lwd=2) 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
